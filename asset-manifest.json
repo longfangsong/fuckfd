@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/fuckfd/static/css/main.5f361e03.chunk.css",
+    "main.js": "/fuckfd/static/js/main.cc15293a.chunk.js",
+    "main.js.map": "/fuckfd/static/js/main.cc15293a.chunk.js.map",
+    "runtime-main.js": "/fuckfd/static/js/runtime-main.66e7c00d.js",
+    "runtime-main.js.map": "/fuckfd/static/js/runtime-main.66e7c00d.js.map",
+    "static/js/2.3bff0399.chunk.js": "/fuckfd/static/js/2.3bff0399.chunk.js",
+    "static/js/2.3bff0399.chunk.js.map": "/fuckfd/static/js/2.3bff0399.chunk.js.map",
+    "index.html": "/fuckfd/index.html",
+    "precache-manifest.8fa47d236a14a92a950834c8af6a6d02.js": "/fuckfd/precache-manifest.8fa47d236a14a92a950834c8af6a6d02.js",
+    "service-worker.js": "/fuckfd/service-worker.js",
+    "static/css/main.5f361e03.chunk.css.map": "/fuckfd/static/css/main.5f361e03.chunk.css.map",
+    "static/js/2.3bff0399.chunk.js.LICENSE.txt": "/fuckfd/static/js/2.3bff0399.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.66e7c00d.js",
+    "static/js/2.3bff0399.chunk.js",
+    "static/css/main.5f361e03.chunk.css",
+    "static/js/main.cc15293a.chunk.js"
+  ]
+}
