@@ -21,13 +21,17 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-    - name: Yarn CLI
+    - name: install dependency
       uses: CultureHQ/actions-yarn@v1.0.1
+      with:
+        args: install
     - name: build
-      run: yarn build
+      uses: CultureHQ/actions-yarn@v1.0.1
+        with:
+          args: build
     - name: GitHub Pages
       uses: crazy-max/ghaction-github-pages@v2.1.0
       with:
         build_dir: build
-  
+
 

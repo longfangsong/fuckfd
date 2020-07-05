@@ -91,7 +91,7 @@ export class Relation {
                     }
                 }
             }
-            if (result.size == last_size) {
+            if (result.size === last_size) {
                 break;
             } else {
                 last_size = result.size;
