@@ -22,3 +22,7 @@ export function isSubSet<T>(maybeSubSet: Set<T>, superSet: Set<T>) {
     }
     return true;
 }
+
+export function equal<T>(a: Set<T>, b: Set<T>): boolean {
+    return isSubSet(a, b) && isSubSet(b, a);
+}

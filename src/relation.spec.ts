@@ -145,6 +145,13 @@ test("thirdNF Test", () => {
     expect(relation.thirdNF).toEqual(true);
 });
 
+test("toThirdNF Test", () => {
+    let relation = Relation.parse("AB->CD,A->D");
+    expect(relation.toThirdNF().size).toEqual(2);
+    relation = Relation.parse("B->C,B->E,C->B,C->D,A");
+    expect(relation.toThirdNF().size).toEqual(3);
+});
+
 test("BCNF Test", () => {
     let relation = Relation.parse("A->B,BC->A");
     expect(relation.BCNF).toEqual(false);

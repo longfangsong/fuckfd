@@ -30,7 +30,14 @@ function App() {
                 }</div>
                 <div>F+={Relation.minify(relation).result.toString()}</div>
                 <div>2NF:<input type="checkbox" name="2nf" checked={relation.secondNF} disabled={true}/></div>
-                <div>3NF:<input type="checkbox" name="3nf" checked={relation.thirdNF} disabled={true}/></div>
+                <div>
+                    3NF:
+                    <input type="checkbox" name="3nf" checked={relation.thirdNF} disabled={true}/>
+                    {
+                        !(relation.thirdNF) &&
+                        <p>分解成3NF: {Array.from(relation.toThirdNF()).map(it => Array.from(it.properties).join('')).join(',')}</p>
+                    }
+                </div>
                 <div>BCNF:<input type="checkbox" name="bcnf" checked={relation.BCNF} disabled={true}/></div>
                 <div>
                     <input value={decomposeIntoStr}
@@ -52,4 +59,5 @@ function App() {
         </div>
     );
 }
+
 export default App;

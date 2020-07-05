@@ -1,5 +1,5 @@
 import {FunctionDependency} from "./function_dependency";
-import {clone, difference, intersect, isSubSet, union} from "./util/set";
+import {clone, difference, equal, intersect, isSubSet, union} from "./util/set";
 import {clone as matrixClone} from "./util/matrix";
 
 export interface EliminatePropertyProcess {
@@ -390,5 +390,53 @@ export class Relation {
 
     public toString() {
         return Array.from(this.fds).join(',');
+    }
+
+    public toThirdNF(): Set<Relation> {
+        let minified = Relation.minify(this).result;
+        let candidateKeys = this.candidateKeys;
+        let leftUnionedFDs = new Map<Set<string>, Set<string>>();
+        for (const fd of minified.fds) {
+            let existedKey = Array.from(leftUnionedFDs.keys()).find(it => equal(it, fd.from));
+            if (existedKey !== undefined) {
+                leftUnionedFDs.set(existedKey, union(leftUnionedFDs.get(Array.from(leftUnionedFDs.keys()).find(it => equal(it, fd.from))!)!, fd.to));
+            } else {
+                leftUnionedFDs.set(fd.from, fd.to)
+            }
+        }
+        let newRelations = new Set<Set<string>>();
+        for (const [k, v] of leftUnionedFDs) {
+            let toAdd = union(k, v);
+            let alreadyContains = false;
+            for (const newRelation of newRelations) {
+                if (equal(newRelation, toAdd)) {
+                    alreadyContains = true;
+                    break;
+                }
+            }
+            if (!alreadyContains) {
+                newRelations.add(toAdd);
+            }
+        }
+        let found = false;
+        for (const relation of newRelations) {
+            for (const candidateKey of candidateKeys) {
+                if (isSubSet(candidateKey, relation)) {
+                    found = true;
+                    break;
+                }
+            }
+        }
+        if (!found) {
+            newRelations.add(Array.from(candidateKeys)[0]);
+        }
+        return new Set(
+            Array.from(newRelations)
+                .map(newRelation => {
+                    let result = new Relation(new Set());
+                    (result as any).properties = newRelation;
+                    return result;
+                })
+        )
     }
 }
