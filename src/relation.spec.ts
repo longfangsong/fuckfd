@@ -27,7 +27,7 @@ test("CandidateKeys Test", () => {
         FunctionDependency.parse("C->D")
     ]));
     relation.addProperty("A");
-    let candidateKeys = relation.candidateKeys;
+    let candidateKeys = relation.candidateKeys.result;
     expect(candidateKeys.size).toEqual(2);
     expect(candidateKeys).toEqual(new Set([new Set(["A", "B"]), new Set(["A", "C"])]));
     relation = new Relation(new Set<FunctionDependency>([
@@ -35,7 +35,7 @@ test("CandidateKeys Test", () => {
         new FunctionDependency(new Set(["A"]), new Set(["C"])),
         new FunctionDependency(new Set(["B"]), new Set(["C"]))
     ]));
-    candidateKeys = relation.candidateKeys;
+    candidateKeys = relation.candidateKeys.result;
     expect(candidateKeys.size).toEqual(1);
     expect(candidateKeys).toEqual(new Set([new Set(["A"])]));
 });

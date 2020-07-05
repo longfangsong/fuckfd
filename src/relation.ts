@@ -22,6 +22,8 @@ export interface MinifyProcess {
 }
 
 export interface CheckLosslessDecomposeProcess {
+    rows: Array<Relation>,
+    columns: Array<string>,
     process: Array<{
         useFD: FunctionDependency,
         resultMatrix: Array<Array<'A' | number>>
@@ -104,7 +106,7 @@ export class Relation {
         return isSubSet(rhs, this.propertyClosure(lhs));
     }
 
-    get candidateKeys(): Set<Set<string>> {
+    get candidateKeys(): { result: Set<Set<string>>, mustHave: Set<string>, mustNotHave: Set<string>, possibleToHave: Set<string> } {
         let existInRight = new Set<string>();
         let existInLeft = new Set<string>();
         for (const fd of this.fds) {
@@ -125,17 +127,22 @@ export class Relation {
                 }
             }
         }
-        return result;
+        return {result, mustHave, mustNotHave, possibleToHave};
     }
 
     get keyAttributes(): Set<string> {
-        return new Set(Array.from(this.candidateKeys)
+        return new Set(Array.from(this.candidateKeys.result)
             .reduce((a, b) => union(a, b)));
     }
 
     static minify(relation: Relation): MinifyProcess {
         let eliminatePropertyResult = this.eliminatePropertyProcess(relation);
         let eliminateFDResult = this.eliminateFDProcess(eliminatePropertyResult.result);
+        (window as any).minify = {
+            eliminateProperty: eliminatePropertyResult.process,
+            eliminateFD: eliminateFDResult.process,
+            result: eliminateFDResult.result
+        };
         return {
             eliminateProperty: eliminatePropertyResult.process,
             eliminateFD: eliminateFDResult.process,
@@ -204,9 +211,11 @@ export class Relation {
         result: boolean
     } {
         let result = false;
-        let process: CheckLosslessDecomposeProcess = {process: []};
+        let process: CheckLosslessDecomposeProcess = {process: [], rows: [], columns: []};
         let columns = Array.from(from.properties).sort();
         let rows = Array.from(to);
+        process.rows = rows;
+        process.columns = columns;
         let matrix: Array<Array<'A' | number>> = [];
         for (let i = 0; i < rows.length; ++i) {
             let row = rows[i];
@@ -287,6 +296,7 @@ export class Relation {
                 }
             }
         }
+        (window as any).lossless = process;
         return {
             process,
             result,
@@ -317,8 +327,8 @@ export class Relation {
     }
 
     get secondNF(): boolean {
-        let keyCodes = this.keyCodes;
-        let candidateKeys = this.candidateKeys;
+        let keyCodes = this.keyAttributes;
+        let candidateKeys = this.candidateKeys.result;
         for (const attribute of this.properties) {
             let isKeyCode = keyCodes.has(attribute);
             if (isKeyCode) continue;
@@ -335,19 +345,11 @@ export class Relation {
         return true;
     }
 
-    get keyCodes(): Set<string> {
-        let keyCodes = new Set<string>();
-        for (const candidateKey of this.candidateKeys) {
-            keyCodes = union(keyCodes, candidateKey);
-        }
-        return keyCodes;
-    }
-
     get thirdNF(): boolean {
         if (!this.secondNF) {
             return false;
         }
-        let candidateKeys = this.candidateKeys;
+        let candidateKeys = this.candidateKeys.result;
         let keyAttributes = this.keyAttributes;
         for (const fd of this.fds) {
             let leftIsSuperkey = false;
@@ -372,7 +374,7 @@ export class Relation {
         if (!this.secondNF) {
             return false;
         }
-        let candidateKeys = this.candidateKeys;
+        let candidateKeys = this.candidateKeys.result;
         for (const fd of this.fds) {
             let leftIsSuperkey = false;
             for (const candidateKey of candidateKeys) {
@@ -394,7 +396,7 @@ export class Relation {
 
     public toThirdNF(): Set<Relation> {
         let minified = Relation.minify(this).result;
-        let candidateKeys = this.candidateKeys;
+        let candidateKeys = this.candidateKeys.result;
         let leftUnionedFDs = new Map<Set<string>, Set<string>>();
         for (const fd of minified.fds) {
             let existedKey = Array.from(leftUnionedFDs.keys()).find(it => equal(it, fd.from));
