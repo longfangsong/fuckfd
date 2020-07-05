@@ -22,13 +22,11 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
     - name: install dependency
-      uses: CultureHQ/actions-yarn@v1.0.1
+      uses: actions/setup-node@v1
       with:
-        args: install
-    - name: build
-      uses: CultureHQ/actions-yarn@v1.0.1
-        with:
-          args: build
+        node-version: '13.13.0'
+    - run: yarn
+    - run: yarn build
     - name: GitHub Pages
       uses: crazy-max/ghaction-github-pages@v2.1.0
       with:
