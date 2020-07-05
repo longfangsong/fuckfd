@@ -29,9 +29,9 @@ function App() {
                     '+ = {' + Array.from(relation.propertyClosure(new Set(findClosure.split('')))).join('') + '}'
                 }</div>
                 <div>F+={Relation.minify(relation).result.toString()}</div>
-                2NF:<input type="checkbox" name="2nf" checked={relation.secondNF} disabled={true}/>
-                3NF:<input type="checkbox" name="3nf" checked={relation.thirdNF} disabled={true}/>
-                BCNF:<input type="checkbox" name="bcnf" checked={relation.BCNF} disabled={true}/>
+                <div>2NF:<input type="checkbox" name="2nf" checked={relation.secondNF} disabled={true}/></div>
+                <div>3NF:<input type="checkbox" name="3nf" checked={relation.thirdNF} disabled={true}/></div>
+                <div>BCNF:<input type="checkbox" name="bcnf" checked={relation.BCNF} disabled={true}/></div>
                 <div>
                     <input value={decomposeIntoStr}
                            onChange={event => setDecomposeIntoStr((event.target as any).value)}/>
