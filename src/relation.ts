@@ -373,7 +373,6 @@ export class Relation {
             return false;
         }
         let candidateKeys = this.candidateKeys;
-        let keyAttributes = this.keyAttributes;
         for (const fd of this.fds) {
             let leftIsSuperkey = false;
             for (const candidateKey of candidateKeys) {
